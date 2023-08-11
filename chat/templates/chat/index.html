@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+</head>
+<body>
+    What chat room would you like to enter?<br/>
+
+    <button class="test_btn" type="submit">click</button>
+
+    <script>
+        let socket = new WebSocket("ws://127.0.0.1:8000/chat/test")
+
+        socket.onopen = () => {
+            socket.send(JSON.stringify({
+                'message': '메세지 보냄'
+            }))
+        }
+
+        socket.onmessage = (e) => {
+            const receiveData = JSON.parse(e.data)
+            console.log(receiveData)
+        }
+
+        <!-- socket.close()        -->
+    </script>
+</body>
+</html>
