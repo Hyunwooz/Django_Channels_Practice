@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+</head>
+<body>
+    <div class='chat_room'></div>
+    <input class="chat-message-input" type="text" size="100"/><br/>
+    <input class="chat-message-submit" type="button" value="Send"/>
+    <input class="chat-message-close" type="button" value="close"/>
+    <script>
+
+        let socket;
+
+        socket = new WebSocket("ws://127.0.0.1:8000/chat/test")
+
+        //socket.onopen = () => {
+        //    socket.send(JSON.stringify({
+        //        'message': '메세지 보냄'
+        //    }))
+        //} 
+        //
+        const $ch = document.querySelector('.chat_room')
+
+        socket.onmessage = (e) => {
+            const receiveData = JSON.parse(e.data)
+            const p = document.createElement('p')
+            p.innerText = receiveData.message
+            $ch.append(p)
+        }
+
+        const $te = document.querySelector('.chat-message-submit')
+        const $close = document.querySelector('.chat-message-close')
+        const $ms = document.querySelector('.chat-message-input')
+        
+
+        const teFunc = () => {
+
+            socket.send(JSON.stringify({
+                'message': $ms.value
+            }))
+
+            $ms.value = '';
+        }
+
+        const closeFunc = () => {
+            socket.close()
+            location.href = '/chat'
+        }
+
+        $te.addEventListener('click',teFunc)
+        $close.addEventListener('click',closeFunc)
+    </script>
+</body>
+</html>

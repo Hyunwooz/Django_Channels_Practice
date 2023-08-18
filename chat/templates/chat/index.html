@@ -5,25 +5,22 @@
     <title>Chat Rooms</title>
 </head>
 <body>
-    What chat room would you like to enter?<br/>
-
-    <button class="test_btn" type="submit">click</button>
+    <p>What chat room would you like to enter?</p>
+    <input id="room-name-input" type="text" size="100"/><br/>
+    <input id="room-name-submit" type="button" value="Enter"/>
 
     <script>
-        let socket = new WebSocket("ws://127.0.0.1:8000/chat/test")
+        document.querySelector('#room-name-input').focus();
+        document.querySelector('#room-name-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#room-name-submit').click();
+            }
+        };
 
-        socket.onopen = () => {
-            socket.send(JSON.stringify({
-                'message': '메세지 보냄'
-            }))
-        }
-
-        socket.onmessage = (e) => {
-            const receiveData = JSON.parse(e.data)
-            console.log(receiveData)
-        }
-
-        <!-- socket.close()        -->
+        document.querySelector('#room-name-submit').onclick = function(e) {
+            var roomName = document.querySelector('#room-name-input').value;
+            window.location.pathname = 'chat/' + roomName + '/';
+        };
     </script>
 </body>
 </html>
