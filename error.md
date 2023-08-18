@@ -16,5 +16,5 @@ Not Found: /chat/test
 ```
 channels            4.0.0
 channels-redis      4.0.0
-Redis 5.0.14.1
+Redis               5.0.14.1
 ```
