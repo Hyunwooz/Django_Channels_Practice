@@ -12,3 +12,9 @@ Review the installation docs at Installation — Channels 4.0.0 documentation 19
 [10/Aug/2023 18:13:42] "GET /chat/ HTTP/1.1" 200 415
 Not Found: /chat/test
 ```
+
+```
+channels            4.0.0
+channels-redis      4.0.0
+Redis 5.0.14.1
+```

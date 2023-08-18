@@ -8,5 +8,4 @@ class Index(View):
 
 class Room(View):
     def get(self, request,room_name):
-        print(room_name)
         return render(request, 'chat/room.html')
