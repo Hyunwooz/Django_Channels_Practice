@@ -3,5 +3,5 @@ from .views import Index, Room
 
 urlpatterns = [
     path('', Index.as_view(), name='index'),
-    path('<str:room_name>/', Room.as_view(), name='room'),
+    path('<str:roomName>/', Room.as_view(), name='room'),
 ]

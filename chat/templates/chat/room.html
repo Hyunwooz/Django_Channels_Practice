@@ -3,6 +3,14 @@
 <head>
     <meta charset="utf-8"/>
     <title>Chat Rooms</title>
+    <style>
+        .chat_m {
+            margin-bottom: 5px;
+        }
+        .chat_m p {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
     <div class='chat_room'></div>
@@ -12,35 +20,66 @@
     <script>
 
         let socket;
+        let is_action = false;
+        let link =  document.location.href;
+        let blog_idx = link.indexOf('chat');
+        link = link.substring(blog_idx+4)
+        const room = link.replace(/\//g, '');
 
-        socket = new WebSocket("ws://127.0.0.1:8000/chat/test")
+        socket = new WebSocket(`ws://127.0.0.1:8000/chat/${room}`)
 
-        //socket.onopen = () => {
-        //    socket.send(JSON.stringify({
-        //        'message': '메세지 보냄'
-        //    }))
-        //} 
-        //
         const $ch = document.querySelector('.chat_room')
+
+        socket.onopen = function (e) {
+            socket.send(JSON.stringify({
+                'method': 'join',
+                'message': 'join'
+            }))
+        }
 
         socket.onmessage = (e) => {
             const receiveData = JSON.parse(e.data)
-            const p = document.createElement('p')
-            p.innerText = receiveData.message
-            $ch.append(p)
+            if(receiveData.status == 'join'){
+                if (is_action){
+                    return false;
+                } else {
+                    const datas = receiveData.message
+                    datas.forEach(element => {
+                        const div = document.createElement('div')
+                        div.className = 'chat_m'
+                        const p = document.createElement('p')
+                        const p2 = document.createElement('p')
+                        p.innerText = '내용 : '+ element.content
+                        p2.innerText = '보낸 시각 : '+element.created_at
+                        div.append(p2,p)
+                        $ch.append(div)
+                    });
+                    is_action = true;
+                }
+            } else {
+                const datas = receiveData.message
+                datas.forEach(element => {
+                    const div = document.createElement('div')
+                    div.className = 'chat_m'
+                    const p = document.createElement('p')
+                    const p2 = document.createElement('p')
+                    p.innerText = '내용 : '+ element.content
+                    p2.innerText = '보낸 시각 : '+element.created_at
+                    div.append(p2,p)
+                    $ch.append(div)
+                });
+            }
         }
 
         const $te = document.querySelector('.chat-message-submit')
         const $close = document.querySelector('.chat-message-close')
         const $ms = document.querySelector('.chat-message-input')
-        
 
         const teFunc = () => {
-
             socket.send(JSON.stringify({
+                'method': 'message',
                 'message': $ms.value
             }))
-
             $ms.value = '';
         }
 
@@ -51,6 +90,7 @@
 
         $te.addEventListener('click',teFunc)
         $close.addEventListener('click',closeFunc)
+
     </script>
 </body>
 </html>
